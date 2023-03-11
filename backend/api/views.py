@@ -28,35 +28,34 @@ class WatchSingleCreateAPI(APIView): # Create 1 single watch
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class WatchBulkCreateAPI(APIView): # Takes in a payload of a list of watch data dictionaries and creates and saves multiple valid watch objects
+# Takes in a payload of a list of watch data dictionaries to create and save multiple valid watch objects in 1 sweep
+class WatchBulkCreateAPI(APIView):
     def post(self, request):
-        data = request.data # Should be a list of dictionaries containing a watch listing's data
+        valid_data = []
+        invalid_data = []
 
-        if isinstance(data, list):
-            receive_count = len(data)
-            add_count = 0
-            watch_data = []
+        # Check if user input is a valid list of watch data dictionaries. Then individully verify each dictionary with serializer
+        if isinstance(request.data, list):
+            for data in request.data:
+                serializer = WatchSerializer(data=data) # Validated each dictionary of scrapped watch data
 
-            for scrapped_watch in request.data:
-                watch_serializer = WatchSerializer(data=scrapped_watch)
+                if serializer.is_valid():
+                    valid_data.append(serializer.data)
 
-                if watch_serializer.is_valid(): # Check if the individual scrapped watch data is valid
-                    validated_data = watch_serializer.validated_data # Deserialize it, this is still a dictionary of watch data for 1 watch object
-                    # Don't need to call watch_serializer.save() as we add and save all watches in bulk at the end
-                    watch_data.append(validated_data) # Append watch validated data to a list of validated watch data objects
-                    add_count += 1
+                else:
+                    invalid_data.append(serializer.errors)
 
-            drop_count = receive_count - add_count
-            Watch.objects.bulk_create(watch_data) # Create a watch object for each valid scrapped watch listing and save to DB
+        else:
+            return Response({'message': 'Payload invalid. Must be a list of watch data dictionaries.'}, status=status.HTTP_400_BAD_REQUEST)
+            
 
+        if valid_data:
+            add_count = len(valid_data)
+            drop_count = len(invalid_data)
+
+            valid_scrapped_watch_data = [Watch(**watch_data) for watch_data in valid_data] # Create Watch Model instances for each valid listing
+            Watch.objects.bulk_create(valid_scrapped_watch_data) # Save all Watch Model instances
             return Response({'message': f'{add_count} scrapped watches added successfully. {drop_count} scrapped watches were not valid and not added'}, status=status.HTTP_200_OK)
         
         else:
-            return Response({'message': 'Payload invalid'}, status=status.HTTP_400_BAD_REQUEST)
-            
-
-
-
-# aight this shits fucked. gotta write a 2nd serializer that serializes the bulk payload
-# and validate each watch data inside. but continue with code if watch data inside is not valid
-
+            return Response({'message': 'No valid watch data receivd. No watch data was saved.'}, status=status.HTTP_400_BAD_REQUEST)

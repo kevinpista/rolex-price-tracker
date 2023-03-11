@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Watch
 
 class WatchSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(default=None)
     class Meta:
         model = Watch
         fields = '__all__'
