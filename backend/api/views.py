@@ -72,7 +72,7 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
 
         filtered_data = Watch.objects.filter(ref_num=ref_num)
 
-        avg_price = filtered_data.aggregate(Avg('price'))['price__avg'] # Aggregate function returns a dictionary
+        avg_price = round(filtered_data.aggregate(Avg('price'))['price__avg'], 2) # Aggregate function returns a dictionary
 
         serializer = AveragePriceSerializer({'average_price': avg_price})
 

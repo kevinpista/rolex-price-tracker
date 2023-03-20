@@ -2,6 +2,7 @@ import React, { useState, useEffect} from "react";
 import watch126334 from '../static/126334.jpg';
 import Figure from 'react-bootstrap/Figure';
 import "../Datejust2.css";
+import { getAvgPrice } from '../api/price'
 
 
 const Datejust126234 = () => {
@@ -11,9 +12,9 @@ const Datejust126234 = () => {
     useEffect(() =>{
 
         let mounted = true;
-        getAvgPrice(#BACKENDCALL).then(data => {
+        getAvgPrice(126234).then(data => {
             if(mounted) {
-                setAvgPrice(data)
+                setAvgPrice(data.average_price)
             }
         })
         return () => mounted = false;
@@ -89,7 +90,7 @@ const Datejust126234 = () => {
                 </tr>
                 <tr>
                   <td><strong>Current Avg. Market Price</strong></td>
-                  <td>$14,468 -- DYNAMIC</td>
+                  <td>{avgprice != null ? `$${Number(avgprice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}</td>
                 </tr>
               </tbody>
             </table>
