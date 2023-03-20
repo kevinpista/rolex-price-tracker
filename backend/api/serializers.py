@@ -34,3 +34,7 @@ class WatchSerializer(serializers.ModelSerializer):
             data['case_size'] = watch_details['case_size']
 
         return data
+    
+class AveragePriceSerializer(serializers.Serializer):
+    average_price = serializers.FloatField()
+

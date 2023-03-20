@@ -1,12 +1,10 @@
 from django.urls import path
-from .views import WatchView, WatchSingleCreateAPI, WatchBulkCreateAPI
-
-
-
+from .views import WatchView, WatchSingleCreateAPI, WatchBulkCreateAPI, AveragePriceAPI
 
 
 urlpatterns =[
     path('watch/', WatchView.as_view()),
     path('watch/single-create/',WatchSingleCreateAPI.as_view()),
-    path('watch/bulk-create/', WatchBulkCreateAPI.as_view())
+    path('watch/bulk-create/', WatchBulkCreateAPI.as_view()),
+    path('avg-price/', AveragePriceAPI.as_view()) 
 ]

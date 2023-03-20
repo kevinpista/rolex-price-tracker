@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from .models import Watch
-from .serializers import WatchSerializer
+from .serializers import WatchSerializer, AveragePriceSerializer
 from rest_framework.pagination import PageNumberPagination
+from django.db.models import Avg
 
 # For JSON Responses
 from rest_framework.response import Response
@@ -63,3 +64,20 @@ class WatchBulkCreateAPI(APIView):
             return Response({'Message': f'{add_count} scrapped watches added successfully. {drop_count} scrapped watches were not valid and not added.'}, status=status.HTTP_200_OK)
         else:
             return Response({'Message': 'No valid watch data received. No watch data was saved.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_num that's passed in as a query paramter
+    def get(self, request):
+        ref_num = request.query_params.get('ref_num')
+
+        filtered_data = Watch.objects.filter(ref_num=ref_num)
+
+        avg_price = filtered_data.aggregate(Avg('price'))['price__avg'] # Aggregate function returns a dictionary
+
+        serializer = AveragePriceSerializer({'average_price': avg_price})
+
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+    
+
+    # need to have error handling here, i.e if ref_num being queried does not exist etc, or avg price data cannot be calcualted
+    # will need to change so we get average price within the last month's worth of data

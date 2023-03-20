@@ -1,0 +1,26 @@
+  
+.logo {
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+
+  }
+  
+  .sidebar {
+     display: flex;
+     height: 100vh;
+     float: left;
+     overflow: 'scroll initial';
+  }
+  
+
+#NavbarParent{
+    display: flex;
+    position: relative;
+    justify-content: center;
+
+}
+
