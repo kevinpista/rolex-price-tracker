@@ -17,7 +17,7 @@ body {
     padding: 20px;
   }
   
-  .left-section,
+  .left-section, .chart-section
   .right-section {
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@ body {
     align-items: center;
     width: 50%;
   }
-  
+
   .figure {
     display: flex;
     flex-direction: column;
@@ -35,8 +35,9 @@ body {
     height: auto;
     margin: 0;
     padding: 0;
+    min-height: 300px;
   }
-  
+
   .caption {
     text-align: center;
   }

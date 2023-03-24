@@ -3,7 +3,16 @@ import watch126334 from '../static/126334.jpg';
 import Figure from 'react-bootstrap/Figure';
 import "../Datejust2.css";
 import { getAvgPrice } from '../api/price'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area } from 'recharts';
 
+const currencyFormatter = (value) => `$${value.toLocaleString()}`;
+
+{/* test data to visualizen chart */}
+const data = [
+  { name: 'Jan 23', price: 14200 },
+  { name: 'Feb 23', price: 15325 },
+  { name: 'Mar 23', price: 15823 },
+];
 
 const Datejust126234 = () => {
 
@@ -37,19 +46,21 @@ const Datejust126234 = () => {
             </Figure.Caption>
         </Figure>
           </div>
+
           <div className="right-section">
-        <Figure className='figure'>
-            <Figure.Image
-                width={325}
-                height={325}
-                alt="300x300"
-                src={watch126334}
-            />
-            <Figure.Caption className='caption'>
-                Rolex Datejust 41 mm Ref. #126334
-            </Figure.Caption>
-        </Figure>
+
+          <LineChart width={600} height={350} data={data}>
+              <CartesianGrid strokeDasharray="2 2" />
+              <XAxis dataKey="name" padding={{ left: 50, right: 50}} />
+              <YAxis tickFormatter={currencyFormatter} domain={['auto', 'dataMax + 2000']} />
+              <Tooltip formatter={currencyFormatter}  />
+              <Legend />
+              <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
+          </LineChart>
+
+
           </div>
+
         </div>
 
         <div>
