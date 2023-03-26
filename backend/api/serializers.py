@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Watch
+from datetime import datetime
 
 class WatchSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(default=None)
@@ -35,6 +36,21 @@ class WatchSerializer(serializers.ModelSerializer):
 
         return data
     
+
 class AveragePriceSerializer(serializers.Serializer):
     average_price = serializers.FloatField()
 
+
+class PriceSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=0)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        # DateField is a datetime object. We filter data with datetime objects in our
+        # ChartDataAPI. We need to return the date as part of the data point, thus
+        # we need to convert the datetime object to a string to return as a JSONresponse.
+        data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date().strftime('%Y-%m-%d')
+
+        return data

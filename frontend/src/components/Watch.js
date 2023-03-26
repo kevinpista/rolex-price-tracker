@@ -1,22 +1,25 @@
 import React, { useState, useEffect} from "react";
 import watch126334 from '../static/126334.jpg';
 import Figure from 'react-bootstrap/Figure';
-import "../Datejust2.css";
+import "../Watch.css";
 import { getAvgPrice } from '../api/price'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area } from 'recharts';
+import { getChartData } from '../api/chartdata'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { watch126234 } from "../static/productData";
 
 const currencyFormatter = (value) => `$${value.toLocaleString()}`;
 
 {/* test data to visualizen chart */}
-const data = [
-  { name: 'Jan 23', price: 14200 },
-  { name: 'Feb 23', price: 15325 },
-  { name: 'Mar 23', price: 15823 },
-];
 
-const Datejust126234 = () => {
 
-    const[avgprice, setAvgPrice] = useState(null);
+// const data = JSON.parse(jsonData);
+
+// const chartData = data.map(({ date, price }) => ({ name: date, price: Number(price) }));
+
+const Watch = () => {
+    const [selectedProduct, setSelectedProduct] = useState(watch126234);
+    const [avgPrice, setAvgPrice] = useState(null);
+    const [chartData, setChartData] = useState(null);
 
     useEffect(() =>{
 
@@ -29,7 +32,28 @@ const Datejust126234 = () => {
         return () => mounted = false;
     }, [])
 
+    useEffect(() =>{
 
+      let mounted = true;
+      getChartData(126334, 30).then(data => {
+
+        if(mounted) {
+          const formattedData = data.map(item => {
+            return {
+              name: item.date,
+              price: parseFloat(item.price)
+            }
+
+          })
+              setChartData(formattedData)
+
+          }
+      })
+      return () => mounted = false;
+  }, [])
+
+
+  
     return (
         <div>
         <div className="top-container">
@@ -49,10 +73,10 @@ const Datejust126234 = () => {
 
           <div className="right-section">
 
-          <LineChart width={600} height={350} data={data}>
+          <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               <XAxis dataKey="name" padding={{ left: 50, right: 50}} />
-              <YAxis tickFormatter={currencyFormatter} domain={['auto', 'dataMax + 2000']} />
+              <YAxis tickFormatter={currencyFormatter} scale = 'log' domain={['auto']} />
               <Tooltip formatter={currencyFormatter}  />
               <Legend />
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
@@ -79,29 +103,29 @@ const Datejust126234 = () => {
               <tbody>
                 <tr>
                   <td><strong>Brand</strong></td>
-                  <td>Rolex</td>
+                  <td>{selectedProduct.brand}</td>
 
                 </tr>
                 <tr>
                   <td><strong>Model</strong></td>
-                  <td>Datejust</td>
+                  <td>{selectedProduct.model}</td>
 
                 </tr>
                 <tr>
                   <td><strong>Reference Number</strong></td>
-                  <td>126234</td>
+                  <td>{selectedProduct.referenceNumber}</td>
                 </tr>
                 <tr>
                   <td><strong>Bezel Material</strong></td>
-                  <td>White Gold</td>
+                  <td>{selectedProduct.bezelMaterial}</td>
                 </tr>
                 <tr>
                   <td><strong>Case Material</strong></td>
-                  <td>Oyster Steel</td>
+                  <td>{selectedProduct.caseMaterial}</td>
                 </tr>
                 <tr>
                   <td><strong>Current Avg. Market Price</strong></td>
-                  <td>{avgprice != null ? `$${Number(avgprice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}</td>
+                  <td>{avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}</td>
                 </tr>
               </tbody>
             </table>
@@ -115,27 +139,27 @@ const Datejust126234 = () => {
               <tbody>
                 <tr>
                   <td><strong>Bezel</strong></td>
-                  <td>Smooth</td>
+                  <td>{selectedProduct.bezel}</td>
                 </tr>
                 <tr>
                   <td><strong>Case Diameter</strong></td>
-                  <td>41 mm</td>
+                  <td>{selectedProduct.caseDiameter}</td>
                 </tr>
                 <tr>
                   <td><strong>Movement</strong></td>
-                  <td>Automatic</td>
+                  <td>{selectedProduct.movement}</td>
                 </tr>
                 <tr>
                   <td><strong>Power Reserve</strong></td>
-                  <td>70 hours</td>
+                  <td>{selectedProduct.powerReserve}</td>
                 </tr>
                 <tr>
                   <td><strong>Dial Colors Options</strong></td>
-                  <td>7</td>
+                  <td>{selectedProduct.dialColorOptions}</td>
                 </tr>
                 <tr>
                   <td><strong>Bracelet Options</strong></td>
-                  <td>Oyster / Jubilee</td>
+                  <td>{selectedProduct.braceletOptions}</td>
                 </tr>
               </tbody>
             </table>
@@ -147,5 +171,5 @@ const Datejust126234 = () => {
     );
   };
 
-export default Datejust126234;
+export default Watch;
 

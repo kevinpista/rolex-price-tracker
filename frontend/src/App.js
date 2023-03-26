@@ -1,8 +1,7 @@
 import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'; 
 import Home from './components/Home'
-import Datejust126334 from './components/Datejust126334'
-import Datejust126234 from './components/Datejust126234'
+import Watch from './components/Watch'
 import Navigation from './components/Navigation';
 
 
@@ -13,8 +12,7 @@ function App() {
 
     <Routes>
       <Route exact ={true} path="/" element={<Home />} />
-      <Route exact ={true} path="datejust/126334" element={<Datejust126334 />} />      
-      <Route exact ={true} path="datejust/126234" element={<Datejust126234 />} />            
+      <Route exact ={true} path="watch" element={<Watch />} />              
 
     </Routes>
 

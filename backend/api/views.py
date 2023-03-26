@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from .models import Watch
-from .serializers import WatchSerializer, AveragePriceSerializer
+from .serializers import WatchSerializer, AveragePriceSerializer, PriceSerializer
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Avg
 
@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+
+from datetime import datetime, timedelta, date
 
 class WatchViewPagination(PageNumberPagination):
     page_size = 100
@@ -81,3 +83,59 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
 
     # need to have error handling here, i.e if ref_num being queried does not exist etc, or avg price data cannot be calcualted
     # will need to change so we get average price within the last month's worth of data
+
+
+class ChartDataAPI(APIView):
+    def get(self, request):
+        interval_periods = {
+            30: 3
+        }
+  
+        ref_num = request.query_params.get('ref_num')
+        interval_days = int(request.query_params.get('interval_days'))
+
+        # we'll do the date difference calculations in this API
+        
+        # Get the current date in YYYY-MM-DD
+        #today = datetime.now().date()
+
+        today = datetime.now().date()
+
+        # Calculate the start date for the last interval_days
+        start_date = today - timedelta(days=interval_days)
+
+        # Get the price data for the last interval_days
+        price_data = Watch.objects.filter(ref_num=ref_num, date_scrapped__range=(start_date, today))
+
+        # Divide the last interval_days in into respective periods for display
+        interval = (timedelta(days=interval_days // interval_periods[interval_days])) # so 30 / 4
+        periods = [(start_date + i*interval, start_date + (i+1)*interval) for i in range(interval_periods[interval_days])]
+
+        # Calculate the average price for each period
+        avg_prices = []
+        for period in periods:
+            period_price_data = price_data.filter(date_scrapped__gte=period[0], date_scrapped__lt=period[1]) # 
+            avg_price = period_price_data.aggregate(Avg('price'))['price__avg']
+            if avg_price == None:
+                avg_price = 0
+
+            serializer = PriceSerializer( {'date': period[0], 'price': avg_price})
+            avg_prices.append(serializer.data)
+
+
+        return JsonResponse(avg_prices, status=status.HTTP_200_OK, safe=False)
+    
+            # Print the average prices for each period
+        #for i, avg_price in enumerate(avg_prices):
+           # period_start_date = periods[i][0].strftime('%Y-%m-%d')
+           # period_end_date = periods[i][1].strftime('%Y-%m-%d')
+            # print(f"Average price for the period {period_start_date} to {period_end_date}: {avg_price}")
+        
+        
+    
+        # RETURN JSON RESPONSE OF THE PRICES IN THIS FOR LOOP. --- think it needs to be a dict assuming
+        # we don't use a serializer to start
+
+        # RN TEST IF THIS FORMAT WORKS AND HOW IT RETURNS VIA POSTMAN
+        # THEN SEE HOW SERIALIZER IS IMPLMENTED AND HELPS KEEP RESPONSE AND CODE 
+        # CONSISTENT
