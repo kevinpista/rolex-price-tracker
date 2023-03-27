@@ -16,7 +16,7 @@ import {
 import {NavLink} from 'react-router-dom';
 
 
-const Navigation = () => {
+const Navigation = ({ watches, handleSelectWatch, selectedWatch }) => {
 
     return (
 
@@ -49,19 +49,19 @@ const Navigation = () => {
         <CDBSidebarContent>
             <CDBSidebarMenu>
 
-                <NavLink exact to="datejust/126334" activeclassname="activeClicked"> 
+                <NavLink onClick={() => handleSelectWatch(watches.watch126334)} > 
                     <CDBSidebarMenuItem icon='minus' >Datejust Fluted 41</CDBSidebarMenuItem>
                 </NavLink>
 
-                <NavLink exact to="/" activeclassname="activeClicked">
-                    <CDBSidebarMenuItem icon="minus">Datejust Fluted 36</CDBSidebarMenuItem>
-                </NavLink>
-
-                <NavLink exact to="/" activeclassname="activeClicked">
+                <NavLink onClick={() => handleSelectWatch(watches.watch126300)}>
                     <CDBSidebarMenuItem icon="minus">Datejust Smooth 41</CDBSidebarMenuItem>
                 </NavLink>
 
-                <NavLink exact to="/" activeclassname="activeClicked">
+                <NavLink onClick={() => handleSelectWatch(watches.watch126234)} >
+                    <CDBSidebarMenuItem icon="minus">Datejust Fluted 36</CDBSidebarMenuItem>
+                </NavLink>
+
+                <NavLink onClick={() => handleSelectWatch(watches.watch126200)} activeclassname="activeClicked">
                     <CDBSidebarMenuItem icon="minus">Datejust Smooth 36</CDBSidebarMenuItem>
                 </NavLink>
 

@@ -1,41 +1,40 @@
 import React, { useState, useEffect} from "react";
-import watch126334 from '../static/126334.jpg';
 import Figure from 'react-bootstrap/Figure';
 import "../Watch.css";
+import Navigation from "./Navigation";
 import { getAvgPrice } from '../api/price'
 import { getChartData } from '../api/chartdata'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { watch126234 } from "../static/productData";
+import { watch126234, watch126334, watch126200, watch126300 } from "../static/productData";
+
 
 const currencyFormatter = (value) => `$${value.toLocaleString()}`;
 
-{/* test data to visualizen chart */}
-
-
-// const data = JSON.parse(jsonData);
-
-// const chartData = data.map(({ date, price }) => ({ name: date, price: Number(price) }));
-
 const Watch = () => {
-    const [selectedProduct, setSelectedProduct] = useState(watch126234);
+    const [selectedWatch, setSelectedWatch] = useState(watch126334);
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
+
+
+    const handleSelectWatch = (watch) => {
+      setSelectedWatch(watch);
+    };
 
     useEffect(() =>{
 
         let mounted = true;
-        getAvgPrice(126234).then(data => {
+        getAvgPrice(selectedWatch.referenceNumber).then(data => {
             if(mounted) {
                 setAvgPrice(data.average_price)
             }
         })
         return () => mounted = false;
-    }, [])
+    }, [selectedWatch])
 
     useEffect(() =>{
 
       let mounted = true;
-      getChartData(126334, 30).then(data => {
+      getChartData(selectedWatch.referenceNumber, 30).then(data => {
 
         if(mounted) {
           const formattedData = data.map(item => {
@@ -50,12 +49,19 @@ const Watch = () => {
           }
       })
       return () => mounted = false;
-  }, [])
+  }, [selectedWatch])
 
 
   
     return (
         <div>
+
+          <Navigation
+              watches={{watch126234, watch126334, watch126200, watch126300}}
+              handleSelectWatch={handleSelectWatch}
+              selectedWatch={selectedWatch}
+          />
+
         <div className="top-container">
           <div className="left-section">
         <Figure className='figure'>
@@ -63,10 +69,10 @@ const Watch = () => {
                 width={325}
                 height={325}
                 alt="300x300"
-                src={watch126334}
+                src={selectedWatch.image}
             />
             <Figure.Caption className='caption'>
-                Rolex Datejust 41 mm Ref. #126334
+                {selectedWatch.imageCaption}
             </Figure.Caption>
         </Figure>
           </div>
@@ -103,25 +109,25 @@ const Watch = () => {
               <tbody>
                 <tr>
                   <td><strong>Brand</strong></td>
-                  <td>{selectedProduct.brand}</td>
+                  <td>{selectedWatch.brand}</td>
 
                 </tr>
                 <tr>
                   <td><strong>Model</strong></td>
-                  <td>{selectedProduct.model}</td>
+                  <td>{selectedWatch.model}</td>
 
                 </tr>
                 <tr>
                   <td><strong>Reference Number</strong></td>
-                  <td>{selectedProduct.referenceNumber}</td>
+                  <td>{selectedWatch.referenceNumber}</td>
                 </tr>
                 <tr>
                   <td><strong>Bezel Material</strong></td>
-                  <td>{selectedProduct.bezelMaterial}</td>
+                  <td>{selectedWatch.bezelMaterial}</td>
                 </tr>
                 <tr>
                   <td><strong>Case Material</strong></td>
-                  <td>{selectedProduct.caseMaterial}</td>
+                  <td>{selectedWatch.caseMaterial}</td>
                 </tr>
                 <tr>
                   <td><strong>Current Avg. Market Price</strong></td>
@@ -139,27 +145,27 @@ const Watch = () => {
               <tbody>
                 <tr>
                   <td><strong>Bezel</strong></td>
-                  <td>{selectedProduct.bezel}</td>
+                  <td>{selectedWatch.bezel}</td>
                 </tr>
                 <tr>
                   <td><strong>Case Diameter</strong></td>
-                  <td>{selectedProduct.caseDiameter}</td>
+                  <td>{selectedWatch.caseDiameter}</td>
                 </tr>
                 <tr>
                   <td><strong>Movement</strong></td>
-                  <td>{selectedProduct.movement}</td>
+                  <td>{selectedWatch.movement}</td>
                 </tr>
                 <tr>
                   <td><strong>Power Reserve</strong></td>
-                  <td>{selectedProduct.powerReserve}</td>
+                  <td>{selectedWatch.powerReserve}</td>
                 </tr>
                 <tr>
                   <td><strong>Dial Colors Options</strong></td>
-                  <td>{selectedProduct.dialColorOptions}</td>
+                  <td>{selectedWatch.dialColorOptions}</td>
                 </tr>
                 <tr>
                   <td><strong>Bracelet Options</strong></td>
-                  <td>{selectedProduct.braceletOptions}</td>
+                  <td>{selectedWatch.braceletOptions}</td>
                 </tr>
               </tbody>
             </table>
