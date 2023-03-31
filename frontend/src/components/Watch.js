@@ -81,7 +81,8 @@ const Watch = () => {
 
           <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
-              <XAxis dataKey="name" padding={{ left: 50, right: 50}} />
+              
+              <XAxis dataKey="name" angle={0} textAnchor="middle" padding={{ left: 50, right: 50}} />
               <YAxis tickFormatter={currencyFormatter} scale = 'log' domain={['auto']} />
               <Tooltip formatter={currencyFormatter}  />
               <Legend />
@@ -95,14 +96,14 @@ const Watch = () => {
 
         <div>
             <h3 className ="centered-heading">
-                Watch Info
+                Reference #{selectedWatch.referenceNumber}
             </h3>
         </div>
 
         <div className="bottom-container">
 
-          <div className="left-section">
-            <table>
+          <div className="left-table-section">
+            <table className='info-table'>
               <thead>
 
               </thead>
@@ -137,8 +138,8 @@ const Watch = () => {
             </table>
           </div>
           
-          <div className="right-section">
-            <table>
+          <div className="right-table-section">
+            <table className='info-table'>
               <thead>
 
               </thead>

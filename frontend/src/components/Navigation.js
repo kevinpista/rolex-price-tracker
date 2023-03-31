@@ -49,20 +49,32 @@ const Navigation = ({ watches, handleSelectWatch, selectedWatch }) => {
         <CDBSidebarContent>
             <CDBSidebarMenu>
 
-                <NavLink onClick={() => handleSelectWatch(watches.watch126334)} > 
+                <NavLink 
+                    onClick={() => handleSelectWatch(watches.watch126334)} 
+                    className={selectedWatch === watches.watch126334 ? 'activeSelection' : ''}
+                > 
                     <CDBSidebarMenuItem icon='minus' >Datejust Fluted 41</CDBSidebarMenuItem>
                 </NavLink>
 
-                <NavLink onClick={() => handleSelectWatch(watches.watch126300)}>
-                    <CDBSidebarMenuItem icon="minus">Datejust Smooth 41</CDBSidebarMenuItem>
+                <NavLink 
+                    onClick={() => handleSelectWatch(watches.watch126300)}
+                    className={selectedWatch === watches.watch126300 ? 'activeSelection' : ''}
+                >
+                    <CDBSidebarMenuItem icon='minus'>Datejust Smooth 41</CDBSidebarMenuItem>
                 </NavLink>
 
-                <NavLink onClick={() => handleSelectWatch(watches.watch126234)} >
-                    <CDBSidebarMenuItem icon="minus">Datejust Fluted 36</CDBSidebarMenuItem>
+                <NavLink 
+                onClick={() => handleSelectWatch(watches.watch126234)} 
+                className={selectedWatch === watches.watch126234 ? 'activeSelection' : ''}
+                >
+                    <CDBSidebarMenuItem icon='minus'>Datejust Fluted 36</CDBSidebarMenuItem>
                 </NavLink>
 
-                <NavLink onClick={() => handleSelectWatch(watches.watch126200)} activeclassname="activeClicked">
-                    <CDBSidebarMenuItem icon="minus">Datejust Smooth 36</CDBSidebarMenuItem>
+                <NavLink 
+                    onClick={() => handleSelectWatch(watches.watch126200)}
+                    className={selectedWatch === watches.watch126200 ? 'activeSelection' : ''}
+                >
+                    <CDBSidebarMenuItem icon='minus'>Datejust Smooth 36</CDBSidebarMenuItem>
                 </NavLink>
 
             </CDBSidebarMenu>

@@ -51,6 +51,7 @@ class PriceSerializer(serializers.Serializer):
         # DateField is a datetime object. We filter data with datetime objects in our
         # ChartDataAPI. We need to return the date as part of the data point, thus
         # we need to convert the datetime object to a string to return as a JSONresponse.
-        data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date().strftime('%Y-%m-%d')
+        #data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date().strftime('%m/%d/%Y') # last part presents the format we want
+        data['date'] = datetime.strptime(data['date'], '%Y-%m-%d').date().strftime('%b %d, %Y') # last part presents the format we want
 
         return data

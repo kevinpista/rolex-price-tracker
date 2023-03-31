@@ -15,6 +15,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    background-color:slategray;
   }
   
   .left-section, .chart-section
@@ -47,7 +48,20 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    background-color:slategray;
   }
+
+.left-table-section,
+.right-table-section {
+  width: 45%; /* adjust as necessary */
+  text-align: center;
+}
+
+.left-section-table table,
+.right-section-table table {
+  width: 100%;
+  margin: auto;
+}
 
   table {
     border-collapse: collapse;
@@ -63,15 +77,15 @@ body {
     background-color: #dddddd;
   }
 
-  tr {
-    border-bottom: 1px solid #ccc;
+  table.info-table tr {
+    border-bottom: 1px solid #ccc; 
   }
   
-  tr:last-child {
+  table.info-table tr:last-child {
     border-bottom: none;
   }
 
-  tr:first-child{
+  table.info-table tr:first-child{
     border-top: 1px solid #ccc;
   }
 
@@ -80,4 +94,5 @@ body {
     text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
+    
   }

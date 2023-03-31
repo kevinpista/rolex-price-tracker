@@ -24,3 +24,8 @@
 
 }
 
+.activeSelection {
+    text-decoration: underline !important;
+    color: #926f34 !important;
+
+}
