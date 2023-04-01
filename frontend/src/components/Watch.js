@@ -15,7 +15,8 @@ const Watch = () => {
     const [selectedWatch, setSelectedWatch] = useState(watch126334);
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
-    const [chartRange, setChartRange] = useState(30);
+    const [chartRange, setChartRange] = useState(1095);
+    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline currently chart range selection
 
 
     const handleSelectWatch = (watch) => {
@@ -24,18 +25,8 @@ const Watch = () => {
 
     const handleChartRange = (days) => {
       setChartRange(days);
+      setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
     };
-
-    useEffect(() =>{
-
-        let mounted = true;
-        getAvgPrice(selectedWatch.referenceNumber).then(data => {
-            if(mounted) {
-                setAvgPrice(data.average_price)
-            }
-        })
-        return () => mounted = false;
-    }, [selectedWatch])
 
     useEffect(() =>{
 
@@ -58,6 +49,16 @@ const Watch = () => {
   }, [selectedWatch, chartRange])
 
 
+  useEffect(() =>{
+
+    let mounted = true;
+    getAvgPrice(selectedWatch.referenceNumber).then(data => {
+        if(mounted) {
+            setAvgPrice(data.average_price)
+        }
+    })
+    return () => mounted = false;
+}, [selectedWatch])
   
     return (
         <div>
@@ -85,25 +86,11 @@ const Watch = () => {
 
           <div className="right-section">
 
-          <Nav defaultActiveKey="5">
-            <Nav.Item>
-              <Nav.Link eventKey="5" active={chartRange === 1095} onClick={() => handleChartRange(1095)}>3 Years</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="4" active={chartRange === 365} onClick={() => handleChartRange(365)}>1 Year</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="4" active={chartRange === 182} onClick={() => handleChartRange(365)}>6 Months</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="2" active={chartRange === 90} onClick={() => handleChartRange(90)}>3 Months</Nav.Link>
-            </Nav.Item>
-            <Nav.Item as="li">
-              <Nav.Link eventKey="1" active={chartRange === 30} onClick={() => handleChartRange(30)}>1 Month</Nav.Link>
-            </Nav.Item>
-
-          </Nav>
-
+          <div>
+            <h4 className ="chart-heading">
+            Market Price Performance
+            </h4>
+        </div>
           <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
@@ -113,7 +100,25 @@ const Watch = () => {
 
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
           </LineChart>
-
+          <div className="nav-container">
+          <Nav className="mr-auto" activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
+            <Nav.Item>
+              <Nav.Link eventKey="1095" active={selectedChartRange === "1095"}>3 Years</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="365" active={selectedChartRange === "365"}>1 Year</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="182" active={selectedChartRange === "182"}>6 Months</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="90" active={selectedChartRange === "90"}>3 Months</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="30" active={selectedChartRange === "30"}>1 Month</Nav.Link>
+            </Nav.Item>
+          </Nav>
+          </div>
 
           </div>
 

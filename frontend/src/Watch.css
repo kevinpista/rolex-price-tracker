@@ -26,6 +26,11 @@ body {
     width: 50%;
   }
 
+  .nav-container {
+    display: flex;
+    justify-content: center;
+  }
+
   .figure {
     display: flex;
     flex-direction: column;
@@ -92,5 +97,19 @@ body {
     text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
-    
+  }
+
+  .chart-heading {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;    
+  }
+
+  .nav-link.active {
+    border-bottom: 3px solid #926f34;
+    font-weight: bold;
+  }
+
+  .nav-link {
+    color: black !important;
   }
