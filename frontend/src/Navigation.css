@@ -3,15 +3,16 @@
 
     display: flex;
     align-items: center;
-
     height: 100%;
+    font-family: Garamond;
+    text-transform: uppercase;
 
 
   }
   
   .sidebar {
      display: flex;
-     height: 100vh;
+     height: 115vh;
      float: left;
      overflow: 'scroll initial';
   }

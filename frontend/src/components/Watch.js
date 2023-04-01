@@ -87,10 +87,11 @@ const Watch = () => {
           <div className="right-section">
 
           <div>
-            <h4 className ="chart-heading">
+            <h5 className ="chart-heading">
             Market Price Performance
-            </h4>
-        </div>
+            </h5>
+          </div>
+          
           <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
