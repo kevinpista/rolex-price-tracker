@@ -5,7 +5,7 @@ import "../Watch.css";
 import Navigation from "./Navigation";
 import { getAvgPrice } from '../api/price'
 import { getChartData } from '../api/chartdata'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { watch126234, watch126334, watch126200, watch126300 } from "../static/productData";
 
 
@@ -73,8 +73,8 @@ const Watch = () => {
           <div className="left-section">
         <Figure className='figure'>
             <Figure.Image
-                width={325}
-                height={325}
+                width={375}
+                height={375}
                 alt="300x300"
                 src={selectedWatch.image}
             />
@@ -92,7 +92,8 @@ const Watch = () => {
             </h5>
           </div>
           
-          <LineChart width={600} height={350} data={chartData}>
+          <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
               <XAxis dataKey="name" angle={0} textAnchor="middle" padding={{ left: 50, right: 50}} />
@@ -101,6 +102,8 @@ const Watch = () => {
 
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
           </LineChart>
+          </ResponsiveContainer>
+
           <div className="nav-container">
           <Nav className="mr-auto" activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
             <Nav.Item>
