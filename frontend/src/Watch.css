@@ -15,7 +15,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color:slategray;
   }
   
   .left-section, .chart-section
@@ -48,7 +47,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color:slategray;
   }
 
 .left-table-section,

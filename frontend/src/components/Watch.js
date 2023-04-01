@@ -14,10 +14,14 @@ const Watch = () => {
     const [selectedWatch, setSelectedWatch] = useState(watch126334);
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
-
+    const [daysToFetch, setDaysToFetch] = useState(30);
 
     const handleSelectWatch = (watch) => {
       setSelectedWatch(watch);
+    };
+
+    const handleFetchData = (days) => {
+      setDaysToFetch(days);
     };
 
     useEffect(() =>{
@@ -34,7 +38,7 @@ const Watch = () => {
     useEffect(() =>{
 
       let mounted = true;
-      getChartData(selectedWatch.referenceNumber, 30).then(data => {
+      getChartData(selectedWatch.referenceNumber, daysToFetch).then(data => {
 
         if(mounted) {
           const formattedData = data.map(item => {
@@ -49,7 +53,7 @@ const Watch = () => {
           }
       })
       return () => mounted = false;
-  }, [selectedWatch])
+  }, [selectedWatch, daysToFetch])
 
 
   
@@ -78,14 +82,19 @@ const Watch = () => {
           </div>
 
           <div className="right-section">
-
+          <div className="chart-buttons">
+            <button onClick={() => handleFetchData(30)}>1 Month</button>
+            <button onClick={() => handleFetchData(90)}>3 Months</button>
+            <button onClick={() => handleFetchData(365)}>1 Year</button>
+            <button onClick={() => handleFetchData(1095)}>3 Years</button>
+          </div>
           <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
               <XAxis dataKey="name" angle={0} textAnchor="middle" padding={{ left: 50, right: 50}} />
               <YAxis tickFormatter={currencyFormatter} scale = 'log' domain={['auto']} />
               <Tooltip formatter={currencyFormatter}  />
-              <Legend />
+
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
           </LineChart>
 

@@ -88,7 +88,13 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
 class ChartDataAPI(APIView):
     def get(self, request):
         interval_periods = {
-            30: 3
+            30: 4, # 30 days(1 mo) returns 4 data points aka 4 weeks
+            90: 6,  # 90 days (3mo) returns 3 data points aka 3 months
+            365: 12, # 365 days so 12 months of dp
+            1095: 6 # 3 years, so 6 months of dp aka 2 months from every year
+        
+            
+
         }
   
         ref_num = request.query_params.get('ref_num')
