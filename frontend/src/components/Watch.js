@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from "react";
 import Figure from 'react-bootstrap/Figure';
+import Nav from 'react-bootstrap/Nav';
 import "../Watch.css";
 import Navigation from "./Navigation";
 import { getAvgPrice } from '../api/price'
@@ -14,14 +15,15 @@ const Watch = () => {
     const [selectedWatch, setSelectedWatch] = useState(watch126334);
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
-    const [daysToFetch, setDaysToFetch] = useState(30);
+    const [chartRange, setChartRange] = useState(30);
+
 
     const handleSelectWatch = (watch) => {
       setSelectedWatch(watch);
     };
 
-    const handleFetchData = (days) => {
-      setDaysToFetch(days);
+    const handleChartRange = (days) => {
+      setChartRange(days);
     };
 
     useEffect(() =>{
@@ -38,7 +40,7 @@ const Watch = () => {
     useEffect(() =>{
 
       let mounted = true;
-      getChartData(selectedWatch.referenceNumber, daysToFetch).then(data => {
+      getChartData(selectedWatch.referenceNumber, chartRange).then(data => {
 
         if(mounted) {
           const formattedData = data.map(item => {
@@ -53,7 +55,7 @@ const Watch = () => {
           }
       })
       return () => mounted = false;
-  }, [selectedWatch, daysToFetch])
+  }, [selectedWatch, chartRange])
 
 
   
@@ -82,12 +84,26 @@ const Watch = () => {
           </div>
 
           <div className="right-section">
-          <div className="chart-buttons">
-            <button onClick={() => handleFetchData(30)}>1 Month</button>
-            <button onClick={() => handleFetchData(90)}>3 Months</button>
-            <button onClick={() => handleFetchData(365)}>1 Year</button>
-            <button onClick={() => handleFetchData(1095)}>3 Years</button>
-          </div>
+
+          <Nav defaultActiveKey="5">
+            <Nav.Item>
+              <Nav.Link eventKey="5" active={chartRange === 1095} onClick={() => handleChartRange(1095)}>3 Years</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="4" active={chartRange === 365} onClick={() => handleChartRange(365)}>1 Year</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="4" active={chartRange === 182} onClick={() => handleChartRange(365)}>6 Months</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="2" active={chartRange === 90} onClick={() => handleChartRange(90)}>3 Months</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+              <Nav.Link eventKey="1" active={chartRange === 30} onClick={() => handleChartRange(30)}>1 Month</Nav.Link>
+            </Nav.Item>
+
+          </Nav>
+
           <LineChart width={600} height={350} data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
@@ -105,7 +121,7 @@ const Watch = () => {
 
         <div>
             <h3 className ="centered-heading">
-                Reference #{selectedWatch.referenceNumber}
+             <u>Avg. Market Price:</u> {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}
             </h3>
         </div>
 
