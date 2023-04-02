@@ -72,7 +72,12 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
     def get(self, request):
         ref_num = request.query_params.get('ref_num')
 
-        filtered_data = Watch.objects.filter(ref_num=ref_num)
+        today = date.today()
+        thirty_days_ago = today - timedelta(days=30)
+
+        filtered_data = Watch.objects.filter(
+            ref_num=ref_num, date_scrapped__range=(thirty_days_ago, today)
+        )
 
         avg_price = round(filtered_data.aggregate(Avg('price'))['price__avg'], 2) # Aggregate function returns a dictionary
 
@@ -88,12 +93,11 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
 class ChartDataAPI(APIView):
     def get(self, request):
         interval_periods = {
-            30: 4, # 30 days(1 mo) returns 4 data points aka 4 weeks
-            90: 6, # 90 days (3mo) returns 3 data points aka 3 months
-            182: 6, # 6 months worth returns 6 months of dp
-            365: 12, # 365 days so 12 months of dp
-            1095: 6 # 3 years, so 6 months of dp aka 2 months from every year
-
+            30: 4, # 1 month, returns 4 data points = 4 weeks
+            90: 3, # 3 months, returns 3 data points = 3 months
+            180: 6, # 6 months, returns 6 data points = 6 months
+            365: 12, # 365 days, returns 12 data points = 12 months
+            1095: 6 # 3 years, returns 6 data pointers = every 2 months
         }
   
         ref_num = request.query_params.get('ref_num')
@@ -110,7 +114,9 @@ class ChartDataAPI(APIView):
         start_date = today - timedelta(days=interval_days)
 
         # Get the price data for the last interval_days
-        price_data = Watch.objects.filter(ref_num=ref_num, date_scrapped__range=(start_date, today))
+        price_data = Watch.objects.filter(
+            ref_num=ref_num, date_scrapped__range=(start_date, today)
+        )
 
         # Divide the last interval_days in into respective periods for display
         interval = (timedelta(days=interval_days // interval_periods[interval_days])) # so 30 / 4
@@ -119,7 +125,9 @@ class ChartDataAPI(APIView):
         # Calculate the average price for each period
         avg_prices = []
         for period in periods:
-            period_price_data = price_data.filter(date_scrapped__gte=period[0], date_scrapped__lt=period[1]) # 
+            period_price_data = price_data.filter(
+                date_scrapped__gte=period[0], date_scrapped__lt=period[1]
+            ) 
             avg_price = period_price_data.aggregate(Avg('price'))['price__avg']
             if avg_price == None:
                 avg_price = 0
@@ -129,18 +137,3 @@ class ChartDataAPI(APIView):
 
 
         return JsonResponse(avg_prices, status=status.HTTP_200_OK, safe=False)
-    
-            # Print the average prices for each period
-        #for i, avg_price in enumerate(avg_prices):
-           # period_start_date = periods[i][0].strftime('%Y-%m-%d')
-           # period_end_date = periods[i][1].strftime('%Y-%m-%d')
-            # print(f"Average price for the period {period_start_date} to {period_end_date}: {avg_price}")
-        
-        
-    
-        # RETURN JSON RESPONSE OF THE PRICES IN THIS FOR LOOP. --- think it needs to be a dict assuming
-        # we don't use a serializer to start
-
-        # RN TEST IF THIS FORMAT WORKS AND HOW IT RETURNS VIA POSTMAN
-        # THEN SEE HOW SERIALIZER IS IMPLMENTED AND HELPS KEEP RESPONSE AND CODE 
-        # CONSISTENT

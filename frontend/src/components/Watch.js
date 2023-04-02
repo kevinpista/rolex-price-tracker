@@ -16,8 +16,23 @@ const Watch = () => {
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
     const [chartRange, setChartRange] = useState(1095);
-    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline currently chart range selection
+    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection
 
+    // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
+    const getYAxisDomain = () => {
+      if (!chartData) {
+        return [0, 1];
+      }
+  
+      const prices = chartData.map((item) => item.price);
+      const maxPrice = Math.max(...prices);
+      const minPrice = Math.min(...prices);
+  
+      const padding = Math.max((maxPrice - minPrice) * 0.1, 1); // Default 10%, but sets a minimum axis price padding of 1
+  
+      return [minPrice - padding, maxPrice + padding];
+    };
+  
 
     const handleSelectWatch = (watch) => {
       setSelectedWatch(watch);
@@ -91,16 +106,17 @@ const Watch = () => {
             Market Price Performance
             </h5>
           </div>
-          
+
           <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="2 2" />
               
-              <XAxis dataKey="name" angle={0} textAnchor="middle" padding={{ left: 50, right: 50}} />
-              <YAxis tickFormatter={currencyFormatter} scale = 'log' domain={['auto']} />
+              <XAxis dataKey="name" angle={0} textAnchor="middle" dy={10}/>
+              <YAxis tickFormatter={currencyFormatter} scale="log" domain={getYAxisDomain()} width={69} dx={-5}/>
               <Tooltip formatter={currencyFormatter}  />
 
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
+              <Legend/>
           </LineChart>
           </ResponsiveContainer>
 
@@ -113,7 +129,7 @@ const Watch = () => {
               <Nav.Link eventKey="365" active={selectedChartRange === "365"}>1 Year</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="182" active={selectedChartRange === "182"}>6 Months</Nav.Link>
+              <Nav.Link eventKey="180" active={selectedChartRange === "180"}>6 Months</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="90" active={selectedChartRange === "90"}>3 Months</Nav.Link>
