@@ -5,7 +5,7 @@ import "../Watch.css";
 import Navigation from "./Navigation";
 import { getAvgPrice } from '../api/price'
 import { getChartData } from '../api/chartdata'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { watch126234, watch126334, watch126200, watch126300 } from "../static/productData";
 
 
@@ -88,8 +88,8 @@ const Watch = () => {
           <div className="left-section">
         <Figure className='figure'>
             <Figure.Image
-                width={375}
-                height={375}
+                width={390}
+                height={390}
                 alt="300x300"
                 src={selectedWatch.image}
             />
@@ -97,14 +97,19 @@ const Watch = () => {
                 {selectedWatch.imageCaption}
             </Figure.Caption>
         </Figure>
+        <div class ='price-box-container'>
+            <h3 className ="price-box">
+             Avg. Market Price: {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : ""}
+            </h3>
+        </div>
           </div>
 
           <div className="right-section">
 
           <div>
-            <h5 className ="chart-heading">
+            <h4 className ="chart-heading">
             Market Price Performance
-            </h5>
+            </h4>
           </div>
 
           <ResponsiveContainer width="100%" height={400}>
@@ -116,7 +121,7 @@ const Watch = () => {
               <Tooltip formatter={currencyFormatter}  />
 
               <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
-              <Legend/>
+              
           </LineChart>
           </ResponsiveContainer>
 
@@ -144,10 +149,10 @@ const Watch = () => {
 
         </div>
 
-        <div>
-            <h3 className ="centered-heading">
-             <u>Avg. Market Price:</u> {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}
-            </h3>
+        <div >
+          <h4 class ='table-heading'>
+             <u>Watch Info</u>
+           </h4>
         </div>
 
         <div className="bottom-container">

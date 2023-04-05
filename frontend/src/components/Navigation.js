@@ -42,7 +42,7 @@ const Navigation = ({ watches, handleSelectWatch, selectedWatch }) => {
     <div className='sidebar'>
     <CDBSidebar textColor="#333" backgroundColor="#f0f0f0">
 
-        <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>
+        <CDBSidebarHeader prefix={<i className="fa fa-bars" />} className='header'>
           Watch List
         </CDBSidebarHeader>
 
