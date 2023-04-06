@@ -1,12 +1,12 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect} from 'react';
 import Figure from 'react-bootstrap/Figure';
 import Nav from 'react-bootstrap/Nav';
-import "../Watch.css";
-import Navigation from "./Navigation";
+import '../Watch.css';
+import Navigation from './Navigation';
 import { getAvgPrice } from '../api/price'
 import { getChartData } from '../api/chartdata'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { watch126234, watch126334, watch126200, watch126300 } from "../static/productData";
+import { watch126234, watch126334, watch126200, watch126300 } from '../static/productData';
 
 
 const currencyFormatter = (value) => `$${value.toLocaleString()}`;
@@ -16,7 +16,7 @@ const Watch = () => {
     const [avgPrice, setAvgPrice] = useState(null);
     const [chartData, setChartData] = useState(null);
     const [chartRange, setChartRange] = useState(1095);
-    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection
+    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection; '3 Years' Default
 
     // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
     const getYAxisDomain = () => {
@@ -43,6 +43,29 @@ const Watch = () => {
       setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
     };
 
+    const renderPercentageChange = () => {
+      if (!chartData) {
+        return null;
+      }
+      
+      const chartFirstPricePoint = chartData[0].price;
+      const chartLastPricePoint = chartData[chartData.length - 1].price;
+      const percentChange = getPercentageChange(chartFirstPricePoint, chartLastPricePoint);
+      const colorChange = percentChange > 0 ? {color: 'green'} : {color: 'red'};
+
+      return (
+        <div className='percentage-change' style={colorChange}>
+          {percentChange > 0 ? '+' : ''}{percentChange}%
+        </div>
+      );
+    };
+
+    const getPercentageChange = (startPrice, endPrice) => {
+      const difference = endPrice - startPrice;
+      const percentChange = (difference / startPrice) * 100;
+      return percentChange.toFixed(2); // Rounds to 2 decimal places
+    };
+  
     useEffect(() =>{
 
       let mounted = true;
@@ -64,16 +87,16 @@ const Watch = () => {
   }, [selectedWatch, chartRange])
 
 
-  useEffect(() =>{
+    useEffect(() =>{
 
-    let mounted = true;
-    getAvgPrice(selectedWatch.referenceNumber).then(data => {
-        if(mounted) {
-            setAvgPrice(data.average_price)
-        }
-    })
-    return () => mounted = false;
-}, [selectedWatch])
+      let mounted = true;
+      getAvgPrice(selectedWatch.referenceNumber).then(data => {
+          if(mounted) {
+              setAvgPrice(data.average_price)
+          }
+      })
+      return () => mounted = false;
+  }, [selectedWatch])
   
     return (
         <div>
@@ -84,80 +107,84 @@ const Watch = () => {
               selectedWatch={selectedWatch}
           />
 
-        <div className="top-container">
-          <div className="left-section">
+        <div className='top-container'>
+          <div className='left-section'>
         <Figure className='figure'>
             <Figure.Image
                 width={390}
                 height={390}
-                alt="300x300"
+                alt='300x300'
                 src={selectedWatch.image}
             />
             <Figure.Caption className='caption'>
                 {selectedWatch.imageCaption}
             </Figure.Caption>
         </Figure>
-        <div class ='price-box-container'>
-            <h3 className ="price-box">
-             Avg. Market Price: {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : ""}
+        <div className ='price-box-container'>
+            <h3 className ='price-box'>
+             Avg. Market Price: {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : ''}
             </h3>
         </div>
           </div>
 
-          <div className="right-section">
+          <div className='right-section'>
 
           <div>
-            <h4 className ="chart-heading">
+            <h4 className ='chart-heading'>
             Market Price Performance
             </h4>
           </div>
 
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width='100%' height={400}>
           <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="2 2" />
+              <CartesianGrid strokeDasharray='2 2' />
               
-              <XAxis dataKey="name" angle={0} textAnchor="middle" dy={10}/>
-              <YAxis tickFormatter={currencyFormatter} scale="log" domain={getYAxisDomain()} width={69} dx={-5}/>
+              <XAxis dataKey='name' angle={0} textAnchor='middle' dy={10}/>
+              <YAxis tickFormatter={currencyFormatter} scale='log' domain={getYAxisDomain()} width={69} dx={-5}/>
               <Tooltip formatter={currencyFormatter}  />
 
-              <Line type="monotone" dataKey="price" stroke="#926f34" activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
+              <Line type='monotone' dataKey='price' stroke='#926f34' activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
               
           </LineChart>
           </ResponsiveContainer>
 
-          <div className="nav-container">
-          <Nav className="mr-auto" activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
+          <div className='nav-container'>
+          <Nav className='mr-auto' activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
             <Nav.Item>
-              <Nav.Link eventKey="1095" active={selectedChartRange === "1095"}>3 Years</Nav.Link>
+              <Nav.Link eventKey='1095' active={selectedChartRange === '1095'}>3 Years</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="365" active={selectedChartRange === "365"}>1 Year</Nav.Link>
+              <Nav.Link eventKey='365' active={selectedChartRange === '365'}>1 Year</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="180" active={selectedChartRange === "180"}>6 Months</Nav.Link>
+              <Nav.Link eventKey='180' active={selectedChartRange === '180'}>6 Months</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="90" active={selectedChartRange === "90"}>3 Months</Nav.Link>
+              <Nav.Link eventKey='90' active={selectedChartRange === '90'}>3 Months</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="30" active={selectedChartRange === "30"}>1 Month</Nav.Link>
+              <Nav.Link eventKey='30' active={selectedChartRange === '30'}>1 Month</Nav.Link>
             </Nav.Item>
           </Nav>
           </div>
 
-          </div>
+        <div className='percentage-change-container'>
+        Percentage Change:&nbsp; {renderPercentageChange()}
+        </div>
+
+        </div>
 
         </div>
 
         <div >
-          <h4 class ='table-heading'>
+          <h4 className='table-heading'>
              <u>Watch Info</u>
            </h4>
         </div>
 
-        <div className="bottom-container">
+        <div className='bottom-container'>
 
-          <div className="left-table-section">
+          <div className='left-table-section'>
             <table className='info-table'>
               <thead>
 
@@ -187,13 +214,13 @@ const Watch = () => {
                 </tr>
                 <tr>
                   <td><strong>Current Avg. Market Price</strong></td>
-                  <td>{avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ""}</td>
+                  <td>{avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ''}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           
-          <div className="right-table-section">
+          <div className='right-table-section'>
             <table className='info-table'>
               <thead>
 
