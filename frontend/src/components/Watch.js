@@ -43,6 +43,25 @@ const Watch = () => {
       setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
     };
 
+    const CustomTooltip = ({ active, payload, label }) => {
+      if (active && payload) {
+        return (
+          <div className="recharts-default-tooltip" style={{border: '2px solid #ccc', backgroundColor: '#fff', padding: '10px'}}>
+            <p className="label" style={{marginBottom: '5px', color: '#666'}}>{`${label}`}</p>
+
+              {payload.map((item, index) => (
+                <p key={index} className="item" style={{color: item.color, margin: 0, display: 'flex', justifyContent: 'space-between'}}>
+                  {`Price: ${currencyFormatter(item.value)}`}
+                </p>
+              ))}
+
+          </div>
+        );
+      }
+    
+      return null;
+    };
+    
     const renderPercentageChange = () => {
       if (!chartData) {
         return null;
@@ -141,7 +160,7 @@ const Watch = () => {
               
               <XAxis dataKey='name' angle={0} textAnchor='middle' dy={10}/>
               <YAxis tickFormatter={currencyFormatter} scale='log' domain={getYAxisDomain()} width={69} dx={-5}/>
-              <Tooltip formatter={currencyFormatter}  />
+              <Tooltip formatter={currencyFormatter} wrapperStyle={{outline: "none"}}  content={<CustomTooltip />} />
 
               <Line type='monotone' dataKey='price' stroke='#926f34' activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
               
