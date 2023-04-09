@@ -7,24 +7,7 @@
     text-transform: uppercase;
   }
   
-  .sidebar {
-     display: flex;
-     height: 115vh;
-     float: left;
-     overflow: 'scroll initial';
-  } 
-
 #NavbarParent{
     display: flex;
-    position: relative;
     justify-content: center;
-}
-
-.activeSelection {
-    text-decoration: underline !important;
-    color: #926f34 !important;
-}
-
-.header{
-    font-family: Garamond !important;
 }

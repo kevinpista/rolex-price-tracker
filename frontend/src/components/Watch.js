@@ -3,6 +3,7 @@ import Figure from 'react-bootstrap/Figure';
 import Nav from 'react-bootstrap/Nav';
 import '../Watch.css';
 import Navigation from './Navigation';
+import Sidebar from './Sidebar'
 import { getAvgPrice } from '../api/price'
 import { getChartData } from '../api/chartdata'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -116,15 +117,21 @@ const Watch = () => {
       })
       return () => mounted = false;
   }, [selectedWatch])
-  
-    return (
-        <div>
 
-          <Navigation
+///// RENDER
+
+    return (
+      <div>
+          <Navigation/>
+        
+        <div className='parent'>
+            <Sidebar 
               watches={{watch126234, watch126334, watch126200, watch126300}}
               handleSelectWatch={handleSelectWatch}
               selectedWatch={selectedWatch}
-          />
+            />
+
+      <div className='main-content'>
 
         <div className='top-container'>
           <div className='left-section'>
@@ -275,7 +282,8 @@ const Watch = () => {
         </div>
       </div>
 
-  
+      </div>
+      </div>
     );
   };
 
