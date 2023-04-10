@@ -72,7 +72,7 @@ for ref_num in scrap_list:
             'condition': condition,
             'box_and_papers': True,
             'seller_location': 'United States',
-            'date_scrapped': '2023-04-02'        
+            'date_scrapped': date_today        
             }
             
             payload.append(scrap_data)
