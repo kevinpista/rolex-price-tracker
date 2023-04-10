@@ -115,103 +115,93 @@ const Watch = () => {
   
 ///// RENDER
 
-    return (
-      <div>
-          <Navigation/>
-        
-        <div className='parent'>
-            <Sidebar 
-              watches={{watch126234, watch126334, watch126200, watch126300}}
-              handleSelectWatch={handleSelectWatch}
-              selectedWatch={selectedWatch}
-            />
+  return (
+    <div>
+      <Navigation/>
+      
+      <div className='parent-container'>
+        <Sidebar 
+          watches={{watch126234, watch126334, watch126200, watch126300}}
+          handleSelectWatch={handleSelectWatch}
+          selectedWatch={selectedWatch}
+          />
 
-      <div className='main-content'>
+        <div className='main-content'>
+          <div className='top-container'>
 
-        <div className='top-container'>
-          <div className='figure-section'>
-        <Figure className='figure'>
-            <Figure.Image
-                width={390}
-                height={390}
-                alt='300x300'
-                src={selectedWatch.image}
-            />
-            <Figure.Caption className='caption'>
-                {selectedWatch.imageCaption}
-            </Figure.Caption>
-        </Figure>
-        <div className ='price-box-container'>
-            <h3 className ='price-box'>
-             Avg. Market Price: {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : ''}
-            </h3>
-        </div>
+            <div className='figure-section'>
+              <Figure className='figure'>
+                <Figure.Image
+                    width={390}
+                    height={390}
+                    alt='300x300'
+                    src={selectedWatch.image}
+                />
+                <Figure.Caption className='caption'>
+                    {selectedWatch.imageCaption}
+                </Figure.Caption>
+              </Figure>
+              <div className ='price-box-container'>
+                  <h3 className ='price-box'>
+                    Avg. Market Price: {avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}` : ''}
+                  </h3>
+              </div>
+            </div>
+
+            <div className='chart-section'>
+              <div>
+                <h4 className ='chart-heading'>
+                Market Price Performance
+                </h4>
+              </div>
+              <ResponsiveContainer width='100%' height={400}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray='2 2' />
+                  <XAxis dataKey='name' angle={0} textAnchor='middle' dy={10}/>
+                  <YAxis tickFormatter={currencyFormatter} scale='log' domain={getYAxisDomain()} width={69} dx={-5}/>
+                  <Tooltip formatter={currencyFormatter} wrapperStyle={{outline: "none"}}  content={<CustomTooltip />} />
+                  <Line type='monotone' dataKey='price' stroke='#926f34' activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+              <div className='nav-container'>
+                <Nav className='mr-auto' activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
+                  <Nav.Item>
+                    <Nav.Link eventKey='1095' active={selectedChartRange === '1095'}>3 Years</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey='365' active={selectedChartRange === '365'}>1 Year</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey='180' active={selectedChartRange === '180'}>6 Months</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey='90' active={selectedChartRange === '90'}>3 Months</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey='30' active={selectedChartRange === '30'}>1 Month</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </div>
+              <div className='percentage-change-container'>
+                Percentage Change:&nbsp; {renderPercentageChange()}
+              </div>
+            </div>
           </div>
 
-          <div className='chart-section'>
-
-          <div>
-            <h4 className ='chart-heading'>
-            Market Price Performance
-            </h4>
+          <div className='table-heading-container'>
+            <h4 className='table-heading'>
+                <u>Watch Info</u>
+              </h4>
           </div>
-
-          <ResponsiveContainer width='100%' height={400}>
-          <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray='2 2' />
-              
-              <XAxis dataKey='name' angle={0} textAnchor='middle' dy={10}/>
-              <YAxis tickFormatter={currencyFormatter} scale='log' domain={getYAxisDomain()} width={69} dx={-5}/>
-              <Tooltip formatter={currencyFormatter} wrapperStyle={{outline: "none"}}  content={<CustomTooltip />} />
-
-              <Line type='monotone' dataKey='price' stroke='#926f34' activeDot={{ r: 8, fill: '#926f34' }} dot={{ fill: '#926f34', strokeWidth: 2, r: 3 }} />
-              
-          </LineChart>
-          </ResponsiveContainer>
-
-          <div className='nav-container'>
-          <Nav className='mr-auto' activeKey={selectedChartRange} onSelect={handleChartRange} style={{marginTop: '17px'}}>
-            <Nav.Item>
-              <Nav.Link eventKey='1095' active={selectedChartRange === '1095'}>3 Years</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey='365' active={selectedChartRange === '365'}>1 Year</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey='180' active={selectedChartRange === '180'}>6 Months</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey='90' active={selectedChartRange === '90'}>3 Months</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey='30' active={selectedChartRange === '30'}>1 Month</Nav.Link>
-            </Nav.Item>
-          </Nav>
+          <div className='bottom-container'>
+            <WatchInfoTable selectedWatch={selectedWatch} avgPrice={avgPrice} />
           </div>
-
-        <div className='percentage-change-container'>
-        Percentage Change:&nbsp; {renderPercentageChange()}
-        </div>
-
-        </div>
-
-        </div>
-
-        <div >
-          <h4 className='table-heading'>
-             <u>Watch Info</u>
-           </h4>
-        </div>
-
-        <div className='bottom-container'>
-          <WatchInfoTable selectedWatch={selectedWatch} avgPrice={avgPrice} />
+          
         </div>
       </div>
-
-      </div>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default Watch;
 
