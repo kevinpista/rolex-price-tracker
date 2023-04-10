@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import Figure from 'react-bootstrap/Figure';
 import Nav from 'react-bootstrap/Nav';
-import '../Watch.css';
+import '../css/Watch.css';
 import WatchInfoTable from './WatchInfoTable';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar'
@@ -20,22 +20,6 @@ const Watch = () => {
   const [chartRange, setChartRange] = useState(1095);
   const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection; '3 Years' Default
 
-  // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
-  const getYAxisDomain = () => {
-    if (!chartData) {
-      return [0, 1];
-    }
-
-    const prices = chartData.map((item) => item.price);
-    const maxPrice = Math.max(...prices);
-    const minPrice = Math.min(...prices);
-
-    const padding = Math.max((maxPrice - minPrice) * 0.1, 1); // Default 10%, but sets a minimum axis price padding of 1
-
-    return [minPrice - padding, maxPrice + padding];
-  };
-
-
   const handleSelectWatch = (watch) => {
     setSelectedWatch(watch);
   };
@@ -44,6 +28,35 @@ const Watch = () => {
     setChartRange(days);
     setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
   };
+  
+  // API call for average market price
+  useEffect(() =>{
+    let mounted = true;
+    getAvgPrice(selectedWatch.referenceNumber).then(data => {
+      if(mounted) {
+        setAvgPrice(data.average_price)
+      }
+    });
+    return () => mounted = false;
+  }, [selectedWatch]);
+
+  // API call for chart data points
+  useEffect(() =>{
+    let mounted = true;
+    getChartData(selectedWatch.referenceNumber, chartRange).then(data => {
+      if(mounted) {
+        const formattedData = data.map(item => {
+          return {
+            name: item.date,
+            price: parseFloat(item.price)
+          }
+        });
+        setChartData(formattedData);
+      }
+    });
+    return () => mounted = false;
+  }, [selectedWatch, chartRange]);
+
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
@@ -61,7 +74,22 @@ const Watch = () => {
     }
     return null;
   };
-  
+
+  // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
+  const getYAxisDomain = () => {
+    if (!chartData) {
+      return [0, 1];
+    }
+
+    const prices = chartData.map((item) => item.price);
+    const maxPrice = Math.max(...prices);
+    const minPrice = Math.min(...prices);
+
+    const padding = Math.max((maxPrice - minPrice) * 0.1, 1); // Default 10%, but sets a minimum axis price padding of 1
+
+    return [minPrice - padding, maxPrice + padding];
+  };
+
   const renderPercentageChange = () => {
     if (!chartData) {
       return null;
@@ -84,35 +112,7 @@ const Watch = () => {
     const percentChange = (difference / startPrice) * 100;
     return percentChange.toFixed(2); // Rounds to 2 decimal places
   };
-
-  // API call for chart data points
-  useEffect(() =>{
-    let mounted = true;
-    getChartData(selectedWatch.referenceNumber, chartRange).then(data => {
-      if(mounted) {
-        const formattedData = data.map(item => {
-          return {
-            name: item.date,
-            price: parseFloat(item.price)
-          }
-        });
-        setChartData(formattedData);
-      }
-    });
-    return () => mounted = false;
-  }, [selectedWatch, chartRange]);
-
-  // API call for average market price
-  useEffect(() =>{
-    let mounted = true;
-    getAvgPrice(selectedWatch.referenceNumber).then(data => {
-      if(mounted) {
-        setAvgPrice(data.average_price)
-      }
-    });
-    return () => mounted = false;
-  }, [selectedWatch]);
-
+  
 ///// RENDER
 
     return (

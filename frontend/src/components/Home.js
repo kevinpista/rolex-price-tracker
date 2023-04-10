@@ -1,8 +1,6 @@
 import React from "react";
 import watch126334 from '../static/126334.jpg';
 import Figure from 'react-bootstrap/Figure';
-import "../Home.css";
-
 
 /* import 1262334-2 from '../static/126334-2.jpg' */
 

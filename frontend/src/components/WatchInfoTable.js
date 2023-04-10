@@ -1,4 +1,4 @@
-import '../WatchInfoTable.css';
+import '../css/WatchInfoTable.css';
 import React from 'react';
 
 

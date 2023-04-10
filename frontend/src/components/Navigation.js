@@ -1,6 +1,6 @@
 import {Navbar} from 'react-bootstrap'
 import logo from "../static/logo.svg"
-import "../Navigation.css";
+import "../css/Navigation.css";
 
 
 
