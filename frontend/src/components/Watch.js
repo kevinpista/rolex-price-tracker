@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react';
 import Figure from 'react-bootstrap/Figure';
 import Nav from 'react-bootstrap/Nav';
 import '../Watch.css';
+import WatchInfoTable from './WatchInfoTable';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar'
 import { getAvgPrice } from '../api/price'
@@ -13,110 +14,104 @@ import { watch126234, watch126334, watch126200, watch126300 } from '../static/pr
 const currencyFormatter = (value) => `$${value.toLocaleString()}`;
 
 const Watch = () => {
-    const [selectedWatch, setSelectedWatch] = useState(watch126334);
-    const [avgPrice, setAvgPrice] = useState(null);
-    const [chartData, setChartData] = useState(null);
-    const [chartRange, setChartRange] = useState(1095);
-    const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection; '3 Years' Default
+  const [selectedWatch, setSelectedWatch] = useState(watch126334);
+  const [avgPrice, setAvgPrice] = useState(null);
+  const [chartData, setChartData] = useState(null);
+  const [chartRange, setChartRange] = useState(1095);
+  const [selectedChartRange, setSelectedChartRange] = useState('1095'); // To underline current chart range selection; '3 Years' Default
 
-    // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
-    const getYAxisDomain = () => {
-      if (!chartData) {
-        return [0, 1];
-      }
-  
-      const prices = chartData.map((item) => item.price);
-      const maxPrice = Math.max(...prices);
-      const minPrice = Math.min(...prices);
-  
-      const padding = Math.max((maxPrice - minPrice) * 0.1, 1); // Default 10%, but sets a minimum axis price padding of 1
-  
-      return [minPrice - padding, maxPrice + padding];
-    };
-  
+  // Calculates a 10% padding to our Linechart's Y-Axis based on current chart data
+  const getYAxisDomain = () => {
+    if (!chartData) {
+      return [0, 1];
+    }
 
-    const handleSelectWatch = (watch) => {
-      setSelectedWatch(watch);
-    };
+    const prices = chartData.map((item) => item.price);
+    const maxPrice = Math.max(...prices);
+    const minPrice = Math.min(...prices);
 
-    const handleChartRange = (days) => {
-      setChartRange(days);
-      setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
-    };
+    const padding = Math.max((maxPrice - minPrice) * 0.1, 1); // Default 10%, but sets a minimum axis price padding of 1
 
-    const CustomTooltip = ({ active, payload, label }) => {
-      if (active && payload) {
-        return (
-          <div className="recharts-default-tooltip" style={{border: '2px solid #ccc', backgroundColor: '#fff', padding: '10px'}}>
-            <p className="label" style={{marginBottom: '5px', color: '#666'}}>{`${label}`}</p>
+    return [minPrice - padding, maxPrice + padding];
+  };
 
-              {payload.map((item, index) => (
-                <p key={index} className="item" style={{color: item.color, margin: 0, display: 'flex', justifyContent: 'space-between'}}>
-                  {`Price: ${currencyFormatter(item.value)}`}
-                </p>
-              ))}
 
-          </div>
-        );
-      }
-    
-      return null;
-    };
-    
-    const renderPercentageChange = () => {
-      if (!chartData) {
-        return null;
-      }
-      
-      const chartFirstPricePoint = chartData[0].price;
-      const chartLastPricePoint = chartData[chartData.length - 1].price;
-      const percentChange = getPercentageChange(chartFirstPricePoint, chartLastPricePoint);
-      const colorChange = percentChange > 0 ? {color: 'green'} : {color: 'red'};
+  const handleSelectWatch = (watch) => {
+    setSelectedWatch(watch);
+  };
 
+  const handleChartRange = (days) => {
+    setChartRange(days);
+    setSelectedChartRange(days.toString()); // Days was passed and converted by handleChartRange to an int, so we convert back to string
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload) {
       return (
-        <div className='percentage-change' style={colorChange}>
-          {percentChange > 0 ? '+' : ''}{percentChange}%
+        <div className="recharts-default-tooltip" style={{border: '2px solid #ccc', backgroundColor: '#fff', padding: '10px'}}>
+          <p className="label" style={{marginBottom: '5px', color: '#666'}}>{`${label}`}</p>
+
+            {payload.map((item, index) => (
+              <p key={index} className="item" style={{color: item.color, margin: 0, display: 'flex', justifyContent: 'space-between'}}>
+                {`Price: ${currencyFormatter(item.value)}`}
+              </p>
+            ))}
         </div>
       );
-    };
-
-    const getPercentageChange = (startPrice, endPrice) => {
-      const difference = endPrice - startPrice;
-      const percentChange = (difference / startPrice) * 100;
-      return percentChange.toFixed(2); // Rounds to 2 decimal places
-    };
+    }
+    return null;
+  };
   
-    useEffect(() =>{
+  const renderPercentageChange = () => {
+    if (!chartData) {
+      return null;
+    }
+    
+    const chartFirstPricePoint = chartData[0].price;
+    const chartLastPricePoint = chartData[chartData.length - 1].price;
+    const percentChange = getPercentageChange(chartFirstPricePoint, chartLastPricePoint);
+    const colorChange = percentChange > 0 ? {color: 'green'} : {color: 'red'};
 
-      let mounted = true;
-      getChartData(selectedWatch.referenceNumber, chartRange).then(data => {
+    return (
+      <div className='percentage-change' style={colorChange}>
+        {percentChange > 0 ? '+' : ''}{percentChange}%
+      </div>
+    );
+  };
 
-        if(mounted) {
-          const formattedData = data.map(item => {
-            return {
-              name: item.date,
-              price: parseFloat(item.price)
-            }
+  const getPercentageChange = (startPrice, endPrice) => {
+    const difference = endPrice - startPrice;
+    const percentChange = (difference / startPrice) * 100;
+    return percentChange.toFixed(2); // Rounds to 2 decimal places
+  };
 
-          })
-              setChartData(formattedData)
-
+  // API call for chart data points
+  useEffect(() =>{
+    let mounted = true;
+    getChartData(selectedWatch.referenceNumber, chartRange).then(data => {
+      if(mounted) {
+        const formattedData = data.map(item => {
+          return {
+            name: item.date,
+            price: parseFloat(item.price)
           }
-      })
-      return () => mounted = false;
-  }, [selectedWatch, chartRange])
+        });
+        setChartData(formattedData);
+      }
+    });
+    return () => mounted = false;
+  }, [selectedWatch, chartRange]);
 
-
-    useEffect(() =>{
-
-      let mounted = true;
-      getAvgPrice(selectedWatch.referenceNumber).then(data => {
-          if(mounted) {
-              setAvgPrice(data.average_price)
-          }
-      })
-      return () => mounted = false;
-  }, [selectedWatch])
+  // API call for average market price
+  useEffect(() =>{
+    let mounted = true;
+    getAvgPrice(selectedWatch.referenceNumber).then(data => {
+      if(mounted) {
+        setAvgPrice(data.average_price)
+      }
+    });
+    return () => mounted = false;
+  }, [selectedWatch]);
 
 ///// RENDER
 
@@ -209,76 +204,7 @@ const Watch = () => {
         </div>
 
         <div className='bottom-container'>
-
-          <div className='left-table-section'>
-            <table className='info-table'>
-              <thead>
-
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Brand</strong></td>
-                  <td>{selectedWatch.brand}</td>
-
-                </tr>
-                <tr>
-                  <td><strong>Model</strong></td>
-                  <td>{selectedWatch.model}</td>
-
-                </tr>
-                <tr>
-                  <td><strong>Reference Number</strong></td>
-                  <td>{selectedWatch.referenceNumber}</td>
-                </tr>
-                <tr>
-                  <td><strong>Bezel Material</strong></td>
-                  <td>{selectedWatch.bezelMaterial}</td>
-                </tr>
-                <tr>
-                  <td><strong>Case Material</strong></td>
-                  <td>{selectedWatch.caseMaterial}</td>
-                </tr>
-                <tr>
-                  <td><strong>Current Avg. Market Price</strong></td>
-                  <td>{avgPrice != null ? `$${Number(avgPrice).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ''}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <div className='right-table-section'>
-            <table className='info-table'>
-              <thead>
-
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Bezel</strong></td>
-                  <td>{selectedWatch.bezel}</td>
-                </tr>
-                <tr>
-                  <td><strong>Case Diameter</strong></td>
-                  <td>{selectedWatch.caseDiameter}</td>
-                </tr>
-                <tr>
-                  <td><strong>Movement</strong></td>
-                  <td>{selectedWatch.movement}</td>
-                </tr>
-                <tr>
-                  <td><strong>Power Reserve</strong></td>
-                  <td>{selectedWatch.powerReserve}</td>
-                </tr>
-                <tr>
-                  <td><strong>Dial Colors Options</strong></td>
-                  <td>{selectedWatch.dialColorOptions}</td>
-                </tr>
-                <tr>
-                  <td><strong>Bracelet Options</strong></td>
-                  <td>{selectedWatch.braceletOptions}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <WatchInfoTable selectedWatch={selectedWatch} avgPrice={avgPrice} />
         </div>
       </div>
 
