@@ -129,7 +129,7 @@ const Watch = () => {
       <div className='main-content'>
 
         <div className='top-container'>
-          <div className='left-section'>
+          <div className='figure-section'>
         <Figure className='figure'>
             <Figure.Image
                 width={390}
@@ -148,7 +148,7 @@ const Watch = () => {
         </div>
           </div>
 
-          <div className='right-section'>
+          <div className='chart-section'>
 
           <div>
             <h4 className ='chart-heading'>

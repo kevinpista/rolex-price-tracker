@@ -17,17 +17,23 @@
   align-items: center;
 }
 
-.left-section, .right-section {
-  width: 50%;
+.figure-section, .chart-section {
   padding: 20px;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   display: flex;
 }
+/* Give slightly more space to LineChart */
+.figure-section{
+  width: 47%;
+}
+.chart-section{
+  width: 53%;
+}
 
 @media (max-width: 800px) {
-  .left-section, .right-section {
+  .figure-section, .chart-section{
     width: 100%;
   }
 }
