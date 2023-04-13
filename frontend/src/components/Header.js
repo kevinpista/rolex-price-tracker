@@ -1,29 +1,12 @@
 import {Navbar} from 'react-bootstrap'
 import logo from "../static/logo.svg"
-import "../css/Navigation.css";
+import "../css/Header.css";
 
 
-
-import {
-    CDBSidebar,
-    CDBSidebarContent,
-    CDBSidebarHeader,
-    CDBSidebarMenu,
-    CDBSidebarMenuItem,
-    CDBSidebarFooter,
-  } from 'cdbreact';
-
-import {NavLink} from 'react-router-dom';
-
-
-const Navigation = () => {
-
+const Header = () => {
     return (
-
     <div>
-
     <Navbar id ='NavbarParent' bg="dark" variant="dark" expand="lg">
-        
         <Navbar.Brand className="logo" href="/" >
             <img
               src={logo}
@@ -35,11 +18,8 @@ const Navigation = () => {
             Rolex Price Tracker
         </Navbar.Brand>
     </Navbar>
-
     </div>
-
     )
 };
 
-
-export default Navigation
+export default Header

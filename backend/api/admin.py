@@ -3,4 +3,4 @@ from .models import Watch
 
 # Register your models here.
 
-admin.site.register(Watch)
+# admin.site.register(Watch)

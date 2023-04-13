@@ -1,5 +1,4 @@
 import '../css/WatchInfoTable.css';
-import React from 'react';
 
 
 const WatchInfoTable = ({ selectedWatch, avgPrice }) => {

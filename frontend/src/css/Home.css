@@ -24,6 +24,7 @@
   flex-direction: column;
   display: flex;
 }
+
 /* Give slightly more space to LineChart */
 .figure-section{
   width: 47%;

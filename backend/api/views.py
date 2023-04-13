@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from .models import Watch
-from .serializers import WatchSerializer, AveragePriceSerializer, PriceSerializer
+from .serializers import WatchSerializer, AveragePriceSerializer, ChartDataSerializer
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Avg
 
@@ -67,8 +67,9 @@ class WatchBulkCreateAPI(APIView):
         else:
             return Response({'Message': 'No valid watch data received. No watch data was saved.'}, status=status.HTTP_400_BAD_REQUEST)
         
-    
-class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_num that's passed in as a query paramter
+
+# Retrieve average market price from last 30 days of specific ref_num that's passed in as a query paramter    
+class AveragePriceAPI(APIView): 
     def get(self, request):
         ref_num = request.query_params.get('ref_num')
 
@@ -80,35 +81,27 @@ class AveragePriceAPI(APIView): # Retrieve average market price of specific ref_
         )
 
         avg_price = round(filtered_data.aggregate(Avg('price'))['price__avg'], 2) # Aggregate function returns a dictionary
-
         serializer = AveragePriceSerializer({'average_price': avg_price})
 
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
-    
-
-    # need to have error handling here, i.e if ref_num being queried does not exist etc, or avg price data cannot be calcualted
-    # will need to change so we get average price within the last month's worth of data
 
 
+# Fetches average market price of ref_num between different interval periods depending on chart range 
 class ChartDataAPI(APIView):
     def get(self, request):
         interval_periods = {
-            30: 4, # 1 month, returns 4 data points = 4 weeks
-            90: 3, # 3 months, returns 3 data points = 3 months
-            180: 6, # 6 months, returns 6 data points = 6 months
-            365: 12, # 365 days, returns 12 data points = 12 months
-            1095: 6 # 3 years, returns 6 data pointers = every 2 months
+            30: 4, # 1 month, returns 4 data points = 1 week intervals
+            90: 3, # 3 months, returns 3 data points = 1 month intervals
+            180: 6, # 6 months, returns 6 data points = 1 month intervals
+            365: 12, # 365 days, returns 12 data points = 1 month intervals
+            1095: 6 # 3 years, returns 6 data points = 6 month intervals
         }
   
         ref_num = request.query_params.get('ref_num')
         interval_days = int(request.query_params.get('interval_days'))
 
-        # we'll do the date difference calculations in this API
-        
-        # Get the current date in YYYY-MM-DD
-        #today = datetime.now().date()
-
-        today = datetime.now().date()
+        # We'll handle the date difference calculations in this API
+        today = datetime.now().date() # YYYY-MM-DD format
 
         # Calculate the start date for the last interval_days
         start_date = today - timedelta(days=interval_days)
@@ -119,7 +112,7 @@ class ChartDataAPI(APIView):
         )
 
         # Divide the last interval_days in into respective periods for display
-        interval = (timedelta(days=interval_days // interval_periods[interval_days])) # so 30 / 4
+        interval = (timedelta(days=interval_days // interval_periods[interval_days]))
         periods = [(start_date + i*interval, start_date + (i+1)*interval) for i in range(interval_periods[interval_days])]
 
         # Calculate the average price for each period
@@ -128,11 +121,11 @@ class ChartDataAPI(APIView):
             period_price_data = price_data.filter(
                 date_scrapped__gte=period[0], date_scrapped__lt=period[1]
             ) 
-            avg_price = period_price_data.aggregate(Avg('price'))['price__avg']
+            avg_price = period_price_data.aggregate(Avg('price'))['price__avg'] # Aggregate function returns a dictionary
             if avg_price == None:
                 avg_price = 0
 
-            serializer = PriceSerializer( {'date': period[0], 'price': avg_price})
+            serializer = ChartDataSerializer({'date': period[0], 'price': avg_price})
             avg_prices.append(serializer.data)
 
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect} from 'react';
 import Figure from 'react-bootstrap/Figure';
 import Nav from 'react-bootstrap/Nav';
-import '../css/Watch.css';
+import '../css/Home.css';
 import WatchInfoTable from './WatchInfoTable';
-import Navigation from './Navigation';
+import Header from './Header';
 import Sidebar from './Sidebar'
-import { getAvgPrice } from '../api/price'
-import { getChartData } from '../api/chartdata'
+import { getAvgPrice } from '../api/Price'
+import { getChartData } from '../api/chartData'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { watch126234, watch126334, watch126200, watch126300 } from '../static/productData';
 
@@ -117,7 +117,7 @@ const Home = () => {
 
   return (
     <div>
-      <Navigation/>
+      <Header/>
       
       <div className='parent-container'>
         <Sidebar 
@@ -190,7 +190,7 @@ const Home = () => {
 
           <div className='table-heading-container'>
             <h4 className='table-heading'>
-                <u>Watch Info</u>
+                Watch Info
               </h4>
           </div>
           <div className='bottom-container'>

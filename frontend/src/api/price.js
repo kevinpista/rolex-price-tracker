@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Fetches the average market price. 
+// API will average price data based on last 30 days.
+
 export function getAvgPrice(ref_num) {
     const refNum = ref_num
 
