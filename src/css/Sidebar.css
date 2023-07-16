@@ -1,0 +1,13 @@
+.sidebar {
+    display: flex;
+    position: sticky;
+ } 
+
+.activeSelection {
+    text-decoration: underline !important;
+    color: #926f34 !important;
+}
+
+.header{
+    font-family: Garamond !important;
+}
