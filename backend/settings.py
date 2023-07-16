@@ -137,5 +137,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000', 'https://my-rolex-price-tracker.herokuapp.com', 'my-rolex-price-tracker.herokuapp.com', 
+    'http://localhost:3000', 'https://my-rolex-price-tracker-bb86e7034531.herokuapp.com', 'my-rolex-price-tracker-bb86e7034531.herokuapp.com', 
 ]
