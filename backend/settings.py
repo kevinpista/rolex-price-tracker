@@ -9,12 +9,15 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+"""
 try:
     from .settings_local import *
 except ImportError:
     pass
+"""
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,6 +86,13 @@ WSGI_APPLICATION = 'wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
+
+
+# Security settings
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS', 'rolex-price-tracker.herokuapp.com')]
+DEBUG = os.environ.get('DJANGO_DEBUG', False)
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
