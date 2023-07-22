@@ -97,6 +97,7 @@ DATABASES = {
 
 # Security settings
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+
 # Retrieve environment variable value of ALLOWED_HOSTS. It expects a list of strings, so we need to split our config variables
 allowed_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS')
 if allowed_hosts:
