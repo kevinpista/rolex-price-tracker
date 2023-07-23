@@ -156,5 +156,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
-    'https://my-rolex-price-tracker-bb86e7034531.herokuapp.com', 'my-rolex-price-tracker-bb86e7034531.herokuapp.com', 
+    'https://my-rolex-price-tracker-bb86e7034531.herokuapp.com', 'my-rolex-price-tracker-bb86e7034531.herokuapp.com','www.my-rolex-price-tracker-bb86e7034531.herokuapp.com' 
 ]
