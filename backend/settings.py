@@ -46,9 +46,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -98,12 +98,16 @@ DATABASES = {
 # Security settings
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# Retrieve environment variable value of ALLOWED_HOSTS. It expects a list of strings, so we need to split our config variables
+# Get the DJANGO_ALLOWED_HOSTS environment variable
 allowed_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS')
+
 if allowed_hosts:
+    # Split the comma-separated list of hosts and add them to ALLOWED_HOSTS
     ALLOWED_HOSTS = allowed_hosts.split(',')
 else:
+    # If DJANGO_ALLOWED_HOSTS is not set, use an empty list or manually add below
     ALLOWED_HOSTS = []
+
 DEBUG = os.environ.get('DJANGO_DEBUG', False)
 
 
@@ -150,8 +154,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'https://my-rolex-price-tracker-bb86e7034531.herokuapp.com', 'my-rolex-price-tracker-bb86e7034531.herokuapp.com', 
 ]
-
-CORS_ORIGIN_ALLOW_ALL = False
