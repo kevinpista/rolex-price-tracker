@@ -108,6 +108,11 @@ else:
     # If DJANGO_ALLOWED_HOSTS is not set, use an empty list or manually add below
     ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS += [
+    'my-rolex-price-tracker-bb86e7034531.herokuapp.com',
+    'www.my-rolex-price-tracker-bb86e7034531.herokuapp.com'
+]
+
 DEBUG = os.environ.get('DJANGO_DEBUG', False)
 
 
