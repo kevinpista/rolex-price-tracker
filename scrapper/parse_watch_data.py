@@ -77,7 +77,7 @@ for ref_num in scrap_list:
             
             payload.append(scrap_data)
 
-    endpoint_url = 'http://127.0.0.1:8000/watch/bulk-create/'
+    endpoint_url = 'https://my-rolex-price-tracker-bb86e7034531.herokuapp.com/api/watch/bulk-create/'
     headers = {'Content-Type': 'application/json'}
     response = requests.post(endpoint_url, data=json.dumps(payload), headers=headers)
     message = response.json()['Message']

@@ -5,6 +5,7 @@ scrapper/126300.html
 scrapper/126234.html
 scrapper/126334.html
 scrapper/parse_test_single_payload.py
+scrapper/live_parse_test_single_payload.py
 scrapper
 scrapper/parse_watch_data.py
 scrapper/count_listings.py
