@@ -9,7 +9,7 @@ const Header = () => {
     <Navbar id ='NavbarParent' bg="dark" variant="dark" expand="lg">
         <Navbar.Brand className="logo" href="/" >
             <img
-              src={logo2}
+              src={logo}
               width="75"
               height="75"
               className="d-inline-block align-center"
