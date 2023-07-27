@@ -7,7 +7,7 @@ function App() {
   return (
     <>
     <Helmet>
-    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}" />
   </Helmet>
     <BrowserRouter>
       <Routes>
