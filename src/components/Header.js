@@ -1,5 +1,5 @@
 import {Navbar} from 'react-bootstrap'
-import logo from "../static/logo2.svg"
+import logo from "../static/logo.svg"
 import "../css/Header.css";
 
 
