@@ -1,5 +1,5 @@
 import {Navbar} from 'react-bootstrap'
-import logo from "../static/logo.svg"
+import logo from "../static/logo2.svg"
 import "../css/Header.css";
 
 
@@ -9,7 +9,7 @@ const Header = () => {
     <Navbar id ='NavbarParent' bg="dark" variant="dark" expand="lg">
         <Navbar.Brand className="logo" href="/" >
             <img
-              src={logo}
+              src={logo2}
               width="75"
               height="75"
               className="d-inline-block align-center"
