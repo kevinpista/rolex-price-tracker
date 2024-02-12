@@ -21,17 +21,17 @@ for ref_num in scrap_list:
     with open(f'{ref_num}.html') as html_file:
         soup = BeautifulSoup(html_file, 'lxml')
         # Grab each listing on search result page
-        for listing in soup.find_all('div', class_='media-flex-body d-flex flex-column justify-content-between'):
+        for listing in soup.find_all('div', class_='media-flex-body d-flex flex-column justify-content-between p-y-2 p-y-sm-0'):
             # Find price
             price = None
-            price_text = listing.find('div', class_='text-xlg text-bold').text.strip().replace('$', '').replace(',', '')
+            price_text = listing.find('div', class_='text-md text-sm-xlg text-bold').text.strip().replace('$', '').replace(',', '')
             if not price_text.isdigit(): # Check is here in case the seller puts "Price on request" and skips the listing
                 continue
             price = price_text
 
             # Find production_year
             production_year = None        
-            divs = listing.find_all('div', class_='row-direct')
+            divs = listing.find_all('div', class_='w-50 row row-direct')
             for div in divs:
                 if 'Year of production' in div.text:
                     production_year = div.find('strong').text.strip()
@@ -39,7 +39,7 @@ for ref_num in scrap_list:
 
             # Find condition
             condition = None
-            divs = listing.find_all('div', class_='row-direct')
+            divs = listing.find_all('div', class_='w-50 row row-direct')
             for div in divs:
                 if 'Condition:' in div.text:
                     condition = div.find('strong').text.strip()
@@ -48,7 +48,7 @@ for ref_num in scrap_list:
             # Box_and_Papers will be True by default as those are the only listings we'll filter for on scrapped website
             # Seller_location will be United States by default as those are the only listings we'll filter for on scrapped website
             
-            listing_title = listing.find('div', class_='text-lg text-ellipsis p-r-5 m-b-2').text.strip().lower()
+            listing_title = listing.find('div', class_='text-sm text-sm-lg text-ellipsis p-r-5 m-b-2').text.strip().lower()
             if 'diamond' in listing_title or 'pearl' in listing_title: # Skip listings with diamond or pearl dials/bezels as prices heavily skew intended scrapped data
                 continue
             
