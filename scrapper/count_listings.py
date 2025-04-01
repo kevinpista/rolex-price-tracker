@@ -21,14 +21,13 @@ for ref_num in scrap_list:
     with open(f'{ref_num}.html') as html_file:
         soup = BeautifulSoup(html_file, 'lxml')
         # Grab each listing on search result page
-        for listing in soup.find_all('div', class_='media-flex-body d-flex flex-column justify-content-between p-y-2 p-y-sm-0'):
+        for listing in soup.find_all('div', class_='media-flex-body d-flex flex-column justify-content-between'):
             # Find price
             price = None
             price_text = listing.find('div', class_='text-md text-sm-xlg text-bold').text.strip().replace('$', '').replace(',', '')
             if not price_text.isdigit(): # Check is here in case the seller puts "Price on request" and skips the listing
                 continue
             price = price_text
-
             # Find production_year
             production_year = None        
             divs = listing.find_all('div', class_='w-50 row row-direct')
@@ -47,13 +46,16 @@ for ref_num in scrap_list:
 
             # Box_and_Papers will be True by default as those are the only listings we'll filter for on scrapped website
             # Seller_location will be United States by default as those are the only listings we'll filter for on scrapped website
-            
+
+            """ 
+            # diamond scrap no longer working despite trying to adjust it so we'll just include diamond watches for now. issue is they have main title and sub title with various div class names
             listing_title = listing.find('div', class_='text-sm text-sm-lg text-ellipsis p-r-5 m-b-2').text.strip().lower()
             if 'diamond' in listing_title or 'pearl' in listing_title: # Skip listings with diamond or pearl dials/bezels as prices heavily skew intended scrapped data
                 continue
             
             if price == None or production_year == None or condition == None: # Skip listing if these fields were not found
                 continue
+            """
 
             listing_scrap_count += 1
 
